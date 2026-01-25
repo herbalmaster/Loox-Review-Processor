@@ -1,0 +1,8 @@
+{
+  "name": "Loox Social Automator Admin",
+  "description": "A comprehensive dashboard for managing and deploying an automated pipeline that converts Loox customer reviews into engaging social media content using Google Cloud and Gemini.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
