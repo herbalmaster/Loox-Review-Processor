@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { Triangle, Github, Terminal, Copy, Globe, Info, CheckCircle, ExternalLink } from 'lucide-react';
+import { Triangle, Github, Terminal, Copy, Globe, Info, CheckCircle, ExternalLink, ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 const VercelDeploymentGuide: React.FC = () => {
   return (
-    <div className="space-y-12 animate-in fade-in duration-700 max-w-4xl mx-auto">
+    <div className="space-y-12 animate-in fade-in duration-700 max-w-5xl mx-auto">
       <div className="bg-slate-900 rounded-[3rem] p-12 text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
         <div className="absolute -left-10 -bottom-10 opacity-5">
            <Triangle size={200} className="fill-current" />
@@ -12,7 +12,7 @@ const VercelDeploymentGuide: React.FC = () => {
         <div className="relative z-10 flex-1">
           <h2 className="text-4xl font-black mb-4 tracking-tighter italic uppercase">Deploy to <span className="text-indigo-400">Vercel</span></h2>
           <p className="text-slate-400 font-medium leading-relaxed">
-            Vercel is the ultimate home for this dashboard. It handles the frontend, the API key security, and the live updates seamlessly.
+            Vercel is the ultimate home for this dashboard. It handles the frontend, the API key security, and the live updates seamlessly via the Vite preset.
           </p>
         </div>
         <div className="relative z-10">
@@ -22,57 +22,65 @@ const VercelDeploymentGuide: React.FC = () => {
         </div>
       </div>
 
-      <div className="space-y-8">
-        <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-          <Terminal size={24} className="text-indigo-600" /> Granular Action Steps
-        </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3">
+            <Terminal size={24} className="text-indigo-600" /> Granular Action Steps
+          </h3>
 
-        <Step 
-          num="1" 
-          title="Create GitHub Repository"
-          desc="Vercel works best with GitHub. Create a new PRIVATE repository named 'loox-dashboard'."
-          cmd="git init\ngit add .\ngit commit -m 'Initial commit'\ngit branch -M main\ngit remote add origin https://github.com/your-username/loox-dashboard.git\ngit push -u origin main"
-        />
+          <Step 
+            num="1" 
+            title="Create GitHub Repository"
+            desc="Vercel works best with GitHub. Create a new PRIVATE repository named 'loox-dashboard'."
+            cmd="git init\ngit add .\ngit commit -m 'Initial commit'\ngit branch -M main\ngit remote add origin https://github.com/your-username/loox-dashboard.git\ngit push -u origin main"
+          />
 
-        <Step 
-          num="2" 
-          title="Import to Vercel"
-          desc="Log into Vercel.com with GitHub. Click 'Add New' -> 'Project'. Select the 'loox-dashboard' repo you just created."
-        />
+          <Step 
+            num="2" 
+            title="Import to Vercel"
+            desc="Log into Vercel.com with GitHub. Click 'Add New' -> 'Project'. Select the 'loox-dashboard' repo you just created."
+          />
 
-        <Step 
-          num="3" 
-          title="Framework Configuration"
-          desc="Vercel will auto-detect the framework. Ensure 'Framework Preset' is set to VITE. This is critical for our module system."
-        />
+          <Step 
+            num="3" 
+            title="Framework Configuration (Vite)"
+            desc="Vercel will auto-detect the framework. Ensure 'Framework Preset' is set to VITE. This is critical for our module system."
+          />
 
-        <Step 
-          num="4" 
-          title="Add Environment Variable (CRITICAL)"
-          desc="Before clicking deploy, expand the 'Environment Variables' section. This allows Gemini to work securely without exposing your key."
-          uiDetails={[
-            "Key: API_KEY",
-            "Value: (Your Gemini API Key from Step 1 of the Master Guide)",
-            "Environment: Production, Preview, and Development"
-          ]}
-        />
+          <Step 
+            num="4" 
+            title="Add Environment Variable"
+            desc="In Settings > Environment Variables, add API_KEY. This allows Gemini to work securely."
+            uiDetails={[
+              "Key: API_KEY",
+              "Value: (Your Gemini API Key)",
+              "Environment: Production, Preview"
+            ]}
+          />
 
-        <Step 
-          num="5" 
-          title="Final Deploy"
-          desc="Click 'Deploy'. After 60 seconds, your site will be live at a URL like 'loox-dashboard.vercel.app'."
-        />
-      </div>
-
-      <div className="bg-indigo-50 border border-indigo-100 p-8 rounded-[2.5rem] flex items-start gap-6">
-        <div className="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-200">
-          <Info className="text-white" size={24} />
+          <Step 
+            num="5" 
+            title="Final Deploy"
+            desc="Click 'Deploy'. Your site will be live in ~60 seconds."
+          />
         </div>
-        <div>
-          <h4 className="text-lg font-black text-indigo-900 mb-2">Why private?</h4>
-          <p className="text-sm text-indigo-800/80 font-medium leading-relaxed">
-            Always keep your repository <strong>Private</strong>. Although your API Key is safe in the Vercel Environment variables, your proprietary extraction code and UI are for your eyes only.
-          </p>
+
+        <div className="space-y-8">
+          <div className="bg-indigo-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-100">
+            <ShieldCheck size={32} className="mb-4 opacity-50" />
+            <h4 className="text-xl font-black mb-4">Security Notice</h4>
+            <p className="text-indigo-100 text-xs font-medium leading-relaxed">
+              Vercel environment variables are encrypted at rest and only decrypted during build/runtime. Your API Key is never exposed to the client-side bundle in a readable format.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm">
+             <Info className="text-indigo-600 mb-4" />
+             <h4 className="font-bold text-slate-800 mb-2">Vite Entry Point</h4>
+             <p className="text-xs text-slate-500 leading-relaxed">
+               The deployment requires <code>index.html</code> to be at the root. Vite uses it as the entry point and automatically bundles <code>index.tsx</code>.
+             </p>
+          </div>
         </div>
       </div>
     </div>

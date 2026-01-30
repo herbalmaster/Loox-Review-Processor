@@ -1,6 +1,9 @@
 
 import React from 'react';
-import { Cloud, Zap, Cpu, Mail, Terminal, ShieldCheck, List, Code, Settings, Copy } from 'lucide-react';
+import { Cloud, Zap, Cpu, Mail, Terminal, ShieldCheck, List, Code, Settings, Copy, FileCode, FileText } from 'lucide-react';
+import TerraformViewer from './TerraformViewer';
+import FunctionCodeViewer from './FunctionCodeViewer';
+import SenseCheckPanel from './SenseCheckPanel';
 
 const GCPSetupViewer: React.FC = () => {
   return (
@@ -10,73 +13,56 @@ const GCPSetupViewer: React.FC = () => {
           <Cloud size={300} />
         </div>
         <div className="relative z-10 max-w-3xl">
-          <h2 className="text-5xl font-black mb-6 tracking-tight leading-tight">Google Cloud <br/><span className="text-indigo-400">Enterprise Core Code</span></h2>
+          <h2 className="text-5xl font-black mb-6 tracking-tight leading-tight uppercase italic">Google Cloud <br/><span className="text-indigo-400">Enterprise Core</span></h2>
           <p className="text-slate-300 text-lg font-medium leading-relaxed mb-10">
-            Full source code for your Cloud Function. This handles Gmail processing and Gemini execution.
+            The professional, serverless approach. Use these configurations to build a high-scale processing pipeline on Google Cloud Platform.
           </p>
         </div>
       </div>
 
-      <div className="space-y-8">
-        <div className="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm">
-          <div className="p-8 border-b border-slate-100 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-slate-900 p-2 rounded-xl">
-                <Code size={18} className="text-white" />
-              </div>
-              <h3 className="font-bold text-slate-800">Cloud Function (index.js)</h3>
+      <SenseCheckPanel />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 px-2">
+            <div className="bg-slate-900 p-2 rounded-xl text-white">
+              <FileCode size={20} />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full">Runtime: Node.js 20</span>
+            <h3 className="text-2xl font-black text-slate-900">Infrastructure (Terraform)</h3>
           </div>
-          <div className="bg-slate-950 p-8 relative group">
-             <button className="absolute top-4 right-4 p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition-all opacity-0 group-hover:opacity-100">
-              <Copy size={16} />
-            </button>
-            <pre className="text-xs font-mono text-blue-400 overflow-x-auto leading-loose">
-{`const { GoogleGenAI } = require("@google/genai");
-const functions = require("@google-cloud/functions-framework");
-
-functions.cloudEvent("processReview", async (cloudEvent) => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
-  // 1. Get Email Data from Pub/Sub
-  const base64Email = cloudEvent.data.message.data;
-  const emailContent = Buffer.from(base64Email, "base64").toString();
-
-  // 2. Call Gemini for Extraction & Caption
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: \`Analyze this Loox email: \${emailContent}. 
-               Extract: product, rating, text. 
-               Generate: high-engagement Instagram caption.\`,
-    config: { responseMimeType: "application/json" }
-  });
-
-  const result = JSON.parse(response.text);
-
-  // 3. Store in Firestore (Admin Dashboard reads this)
-  const db = require("@google-cloud/firestore").Firestore();
-  await db.collection("reviews").add({
-    ...result,
-    status: "PENDING_APPROVAL",
-    createdAt: new Date().toISOString()
-  });
-});`}
-            </pre>
-          </div>
+          <TerraformViewer />
         </div>
 
-        <div className="bg-amber-50 border border-amber-200 p-8 rounded-[2.5rem] flex items-start gap-6">
-          <div className="bg-amber-400 p-3 rounded-2xl shadow-lg">
-            <Terminal size={24} className="text-white" />
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 px-2">
+            <div className="bg-slate-900 p-2 rounded-xl text-white">
+              <FileText size={20} />
+            </div>
+            <h3 className="text-2xl font-black text-slate-900">Application Logic (Node.js)</h3>
           </div>
-          <div>
-            <h4 className="text-xl font-black text-amber-900 mb-2">How to Deploy</h4>
-            <div className="text-sm text-amber-800/80 font-medium space-y-2">
-              <p>1. Open Google Cloud Shell (terminal icon in GCP Console).</p>
-              <p>2. Create a folder: <code className="bg-amber-100 px-1 rounded">mkdir review-bot && cd review-bot</code></p>
-              <p>3. Create index.js and paste the code above.</p>
-              <p>4. Deploy: <code className="bg-amber-100 px-1 rounded">gcloud functions deploy processReview --trigger-topic reviews --runtime nodejs20</code></p>
+          <FunctionCodeViewer />
+        </div>
+      </div>
+
+      <div className="space-y-8">
+        <div className="flex items-center gap-3 px-2">
+          <div className="bg-slate-900 p-2 rounded-xl text-white">
+            <Terminal size={20} />
+          </div>
+          <h3 className="text-2xl font-black text-slate-900">Deployment Commands</h3>
+        </div>
+        <div className="bg-amber-50 border border-amber-200 p-10 rounded-[2.5rem] flex items-start gap-8 shadow-sm">
+          <div className="bg-amber-400 p-4 rounded-2xl shadow-lg shrink-0">
+            <Terminal size={32} className="text-white" />
+          </div>
+          <div className="space-y-4">
+            <h4 className="text-xl font-black text-amber-900">Step-by-Step Deployment</h4>
+            <div className="text-sm text-amber-800 font-medium space-y-4 leading-relaxed">
+              <p>1. <strong>Open Console:</strong> Access the <a href="https://console.cloud.google.com" className="underline font-bold" target="_blank">Google Cloud Console</a> and open the Cloud Shell.</p>
+              <p>2. <strong>Setup Project:</strong> Set your project ID: <code className="bg-amber-100 px-2 py-0.5 rounded border border-amber-200">gcloud config set project [YOUR_PROJECT_ID]</code></p>
+              <p>3. <strong>Enable Services:</strong> Enable Pub/Sub and Functions: <code className="bg-amber-100 px-2 py-0.5 rounded border border-amber-200">gcloud services enable pubsub.googleapis.com cloudfunctions.googleapis.com</code></p>
+              <p>4. <strong>Deploy Topic:</strong> Create the entry point: <code className="bg-amber-100 px-2 py-0.5 rounded border border-amber-200">gcloud pubsub topics create review-extracted-topic</code></p>
+              <p>5. <strong>Deploy Function:</strong> Upload your code: <code className="bg-amber-100 px-2 py-0.5 rounded border border-amber-200">gcloud functions deploy processReview --trigger-topic review-extracted-topic --runtime nodejs20</code></p>
             </div>
           </div>
         </div>
